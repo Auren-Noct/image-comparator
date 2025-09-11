@@ -1,0 +1,13 @@
+# Directorios de dependencias y de build
+node_modules
+dist
+*.log
+.git
+.gitignore
+.env
+
+.vscode/
+.idea/
+.DS_Store
+*.swp
+Thumbs.db
