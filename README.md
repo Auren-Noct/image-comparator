@@ -1,69 +1,85 @@
-# React + TypeScript + Vite
+# Image Comparator
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Una aplicación web para comparar dos imágenes y resaltar las diferencias entre ellas. Permite arrastrar y soltar imágenes, hacer zoom y moverlas sincronizadamente, y muestra el porcentaje de similitud entre ambas.
 
-Currently, two official plugins are available:
+## Características
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Arrastrar y soltar**: Sube dos imágenes fácilmente.
+- **Zoom y movimiento sincronizado**: Haz zoom y mueve ambas imágenes al mismo tiempo para comparar detalles.
+- **Comparación visual**: Genera una imagen resaltando las diferencias pixel a pixel.
+- **Porcentaje de similitud**: Muestra el porcentaje de coincidencia entre las imágenes.
+- **Intercambio rápido**: Botón para intercambiar las imágenes.
 
-## Expanding the ESLint configuration
+## Instalación
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+1. Clona el repositorio:
+   ```sh
+   git clone https://github.com/Auren-Noct/image-comparator.git
+   cd image-comparator
+   ```
+2. Instala las dependencias:
+   ```sh
+   pnpm install
+   ```
+   o
+   ```sh
+   npm install
+   ```
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Uso
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+- Inicia el servidor de desarrollo:
+  ```sh
+  pnpm dev
+  ```
+  o
+  ```sh
+  npm run dev
+  ```
+- Abre [http://localhost:5173](http://localhost:5173) en tu navegador.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Scripts disponibles
+
+- `dev`: Ejecuta la app en modo desarrollo.
+- `build`: Compila el proyecto y genera la versión de producción.
+- `preview`: Previsualiza la versión de producción.
+- `lint`: Ejecuta ESLint para analizar el código.
+
+## Estructura del proyecto
+
+```
+├── public/
+│   └── vite.svg
+├── src/
+│   ├── App.tsx
+│   ├── main.tsx
+│   ├── index.css
+│   └── components/
+│       └── ImageComparator.tsx
+├── index.html
+├── package.json
+├── README.md
+└── ...
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Configuración de ESLint
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+El proyecto incluye reglas básicas de ESLint y soporte para React y TypeScript. Para reglas más estrictas y específicas de React, consulta la sección "Expanding the ESLint configuration" en este archivo.
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## Tecnologías utilizadas
+
+- [React](https://react.dev/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [Vite](https://vitejs.dev/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [React Dropzone](https://react-dropzone.js.org/)
+
+## Autor
+
+Walter Marcos Crespín  
+[GitHub](https://github.com/Auren-Noct)  
+[Email](mailto:walter.crespin49@gmail.com)
+
+## Licencia
+
+Este proyecto está bajo la licencia MIT.
