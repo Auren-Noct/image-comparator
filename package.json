@@ -1,7 +1,13 @@
 {
   "name": "image-comparator",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "description": "Una aplicación web para comparar dos imágenes y resaltar las diferencias entre ellas.",
+  "author": {
+    "name": "Walter Marcos Crespín",
+    "email": "walter.crespin49@gmail.com",
+    "url": "https://github.com/Auren-Noct"
+  },
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -10,10 +16,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "bootstrap": "^5.3.8",
+    "@tailwindcss/vite": "^4.1.13",
     "react": "^19.1.1",
-    "react-bootstrap": "^2.10.10",
-    "react-dom": "^19.1.1"
+    "react-dom": "^19.1.1",
+    "react-dropzone": "^14.3.8",
+    "tailwindcss": "^4.1.13"
   },
   "devDependencies": {
     "@eslint/js": "^9.33.0",
