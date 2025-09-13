@@ -1,4 +1,4 @@
-import ImageComparator from "./components/imageComparator";
+import ImageComparator from "./components/ImageComparator";
 
 function App() {
   return (
