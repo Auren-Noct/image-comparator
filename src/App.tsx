@@ -1,10 +1,13 @@
+import ImageComparatorProvider from "./context/ImageComparatorContext";
 import ImageComparator from "./components/ImageComparator";
 
 function App() {
   return (
-    <>
-      <ImageComparator />
-    </>
+    <div className="w-full h-screen bg-gray-100 font-sans p-4">
+      <ImageComparatorProvider>
+        <ImageComparator />
+      </ImageComparatorProvider>
+    </div>
   );
 }
 
