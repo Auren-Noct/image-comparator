@@ -1,4 +1,4 @@
-# Comparador de Imágenes
+# Image Comparator
 
 ## 📝 Descripción del Proyecto
 
@@ -31,14 +31,14 @@ El proyecto está construido sobre una arquitectura moderna, utilizando las sigu
 
 Para poner en marcha el proyecto en tu entorno local, sigue estos pasos. Se recomienda usar **pnpm** como gestor de paquetes.
 
-1.  Clona el repositorio:
-    `git clone https://github.com/Auren-Noct/image-comparator.git`
+1. Clona el repositorio:
+   `git clone https://github.com/Auren-Noct/image-comparator.git`
 
-2.  Navega al directorio del proyecto:
-    `cd image-comparator`
+2. Navega al directorio del proyecto:
+   `cd image-comparator`
 
-3.  Instala las dependencias:
-    `pnpm install`
+3. Instala las dependencias:
+   `pnpm install`
 
 ---
 
@@ -66,14 +66,10 @@ pnpm run build
 
 - **Nombre**: Walter Marcos Crespín
 - **GitHub**: [Auren-Noct](https://github.com/Auren-Noct)
-- **Correo electrónico**: walter.crespin49@gmail.com
+- **Correo electrónico**: <walter.crespin49@gmail.com>
 
 ---
 
 ## 📜 Licencia
 
 Este proyecto está bajo la **Licencia MIT**. Puedes encontrar el texto completo de la licencia en el archivo `LICENSE`.
-
-```
-
-```
