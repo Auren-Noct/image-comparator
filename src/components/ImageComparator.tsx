@@ -43,78 +43,80 @@ const ImageComparator = () => {
       <canvas ref={tempCanvasRef} style={{ display: "none" }}></canvas>
       <canvas ref={comparisonCanvasRef} style={{ display: "none" }}></canvas>
 
-      {/* Primer Drag and Drop */}
-      <div
-        ref={containerRef1}
-        className={`${containerClass} h-full transition-all duration-500 rounded-lg shadow-lg flex flex-col justify-center items-center bg-white`}
-      >
-        <ImageDropZone
-          imageURL={image1Url}
-          dropzoneProps={dropzoneProps1}
-          title="primera imagen"
-          titleColorClass="text-blue-500"
-          globalScale={globalScale}
-          globalPosition={globalPosition}
-          isDragging={isDragging}
-          handleWheel={handleWheel}
-          handleMouseDown={handleMouseDown}
-          zoomPercentage={image1Zoom}
-        />
-      </div>
-
-      {/* Segundo Drag and Drop */}
-      <div
-        ref={containerRef2}
-        className={`${containerClass} h-full transition-all duration-500 rounded-lg shadow-lg flex flex-col justify-center items-center bg-white`}
-      >
-        <ImageDropZone
-          imageURL={image2Url}
-          dropzoneProps={dropzoneProps2}
-          title="segunda imagen"
-          titleColorClass="text-green-500"
-          globalScale={globalScale}
-          globalPosition={globalPosition}
-          isDragging={isDragging}
-          handleWheel={handleWheel}
-          handleMouseDown={handleMouseDown}
-          zoomPercentage={image2Zoom}
-        />
-      </div>
-
-      {/* Imagen de Comparación */}
-      {isSecondImageLoaded && (
+      <div className="flex flex-row h-screen w-full gap-0">
+        {/* Primer Drag and Drop */}
         <div
-          className={`${containerClass} h-full transition-all duration-500 rounded-lg shadow-lg flex flex-col justify-center items-center bg-white relative`}
+          ref={containerRef1}
+          className={`${containerClass} h-full transition-all duration-500 rounded-lg shadow-lg flex flex-col justify-center items-center bg-white`}
         >
-          <DraggableImage
-            scale={globalScale}
-            position={globalPosition}
-            onWheel={handleWheel}
-            onMouseDown={handleMouseDown}
+          <ImageDropZone
+            imageURL={image1Url}
+            dropzoneProps={dropzoneProps1}
+            title="primera imagen"
+            titleColorClass="text-blue-500"
+            globalScale={globalScale}
+            globalPosition={globalPosition}
             isDragging={isDragging}
-          >
-            <div className="relative w-full h-full">
-              {showBaseImage && image1Url && (
-                <img
-                  src={image1Url}
-                  alt="Imagen de Fondo"
-                  className="absolute inset-0 w-full h-full object-contain pointer-events-none"
-                />
-              )}
-              {comparisonImageUrl && (
-                <img
-                  src={comparisonImageUrl}
-                  alt="Imagen de Comparación"
-                  className="absolute inset-0 w-full h-full object-contain"
-                />
-              )}
-            </div>
-          </DraggableImage>
-
-          <ComparisonStats />
-          <ImageOptions />
+            handleWheel={handleWheel}
+            handleMouseDown={handleMouseDown}
+            zoomPercentage={image1Zoom}
+          />
         </div>
-      )}
+
+        {/* Segundo Drag and Drop */}
+        <div
+          ref={containerRef2}
+          className={`${containerClass} h-full transition-all duration-500 rounded-lg shadow-lg flex flex-col justify-center items-center bg-white`}
+        >
+          <ImageDropZone
+            imageURL={image2Url}
+            dropzoneProps={dropzoneProps2}
+            title="segunda imagen"
+            titleColorClass="text-green-500"
+            globalScale={globalScale}
+            globalPosition={globalPosition}
+            isDragging={isDragging}
+            handleWheel={handleWheel}
+            handleMouseDown={handleMouseDown}
+            zoomPercentage={image2Zoom}
+          />
+        </div>
+
+        {/* Imagen de Comparación */}
+        {isSecondImageLoaded && (
+          <div
+            className={`${containerClass} h-full transition-all duration-500 rounded-lg shadow-lg flex flex-col justify-center items-center bg-white relative`}
+          >
+            <DraggableImage
+              scale={globalScale}
+              position={globalPosition}
+              onWheel={handleWheel}
+              onMouseDown={handleMouseDown}
+              isDragging={isDragging}
+            >
+              <div className="relative w-full h-full">
+                {showBaseImage && image1Url && (
+                  <img
+                    src={image1Url}
+                    alt="Imagen de Fondo"
+                    className="absolute inset-0 w-full h-full object-contain pointer-events-none"
+                  />
+                )}
+                {comparisonImageUrl && (
+                  <img
+                    src={comparisonImageUrl}
+                    alt="Imagen de Comparación"
+                    className="absolute inset-0 w-full h-full object-contain"
+                  />
+                )}
+              </div>
+            </DraggableImage>
+
+            <ComparisonStats />
+            <ImageOptions />
+          </div>
+        )}
+      </div>
 
       <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 flex gap-4">
         <ImageSwapButton />

@@ -3,7 +3,7 @@ import ImageComparator from "./components/ImageComparator";
 
 function App() {
   return (
-    <div className="w-full h-screen bg-gray-100 font-sans p-4">
+    <div className="w-full h-screen bg-gray-100 font-sans">
       <ImageComparatorProvider>
         <ImageComparator />
       </ImageComparatorProvider>
