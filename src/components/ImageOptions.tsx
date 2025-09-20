@@ -17,7 +17,7 @@ const ImageOptions = () => {
 
   return (
     <div className="absolute top-4 right-4 flex flex-col gap-2 p-2 bg-white bg-opacity-75 rounded-lg shadow-md">
-      <label className="inline-flex items-center text-sm font-medium text-gray-800">
+      <label className="inline-flex items-center text-sm font-medium text-gray-800 cursor-pointer">
         <input
           type="checkbox"
           checked={showBaseImage}
@@ -26,7 +26,7 @@ const ImageOptions = () => {
         />
         <span className="ml-2">Mostrar Fondo</span>
       </label>
-      <label className="inline-flex items-center text-sm font-medium text-gray-800">
+      <label className="inline-flex items-center text-sm font-medium text-gray-800 cursor-pointer">
         <input
           type="checkbox"
           checked={showSimilarities}
@@ -35,7 +35,7 @@ const ImageOptions = () => {
         />
         <span className="ml-2">Mostrar Similitudes</span>
       </label>
-      <label className="inline-flex items-center text-sm font-medium text-gray-800">
+      <label className="inline-flex items-center text-sm font-medium text-gray-800 cursor-pointer">
         <input
           type="checkbox"
           checked={showDifferences}

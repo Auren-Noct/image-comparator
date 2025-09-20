@@ -15,7 +15,7 @@ const ImageSwapButton = () => {
   return (
     <button
       onClick={handleSwapImages}
-      className="px-6 py-3 bg-blue-500 text-white rounded-full shadow-lg hover:bg-blue-600 transition-colors duration-300"
+      className="cursor-pointer rounded-full bg-blue-500 px-4 py-2 text-white shadow-lg transition-all duration-300 scale-90 opacity-50 hover:scale-100 hover:opacity-100 focus:scale-100 focus:opacity-100"
     >
       Intercambiar Imágenes
     </button>
