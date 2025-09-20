@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
 /**
- * Hook personalizado para manejar la lógica de arrastre y zoom sincronizados.
+ * Hook para manejar la lógica de arrastre y zoom sincronizados de elementos.
+ * @returns {object} Un objeto con el estado y los manejadores de eventos.
  */
 export const useSynchronizedDragZoom = () => {
   const [globalScale, setGlobalScale] = useState<number>(1);
@@ -12,6 +13,10 @@ export const useSynchronizedDragZoom = () => {
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const startPositionRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
 
+  /**
+   * Maneja el evento de la rueda del ratón para el zoom.
+   * @param e El evento de la rueda del ratón.
+   */
   const handleWheel = useCallback(
     (e: React.WheelEvent<HTMLDivElement>) => {
       e.preventDefault();
@@ -21,6 +26,10 @@ export const useSynchronizedDragZoom = () => {
     [globalScale]
   );
 
+  /**
+   * Maneja el evento de clic del ratón para iniciar el arrastre.
+   * @param e El evento de clic del ratón.
+   */
   const handleMouseDown = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
       e.preventDefault();
@@ -33,6 +42,10 @@ export const useSynchronizedDragZoom = () => {
     [globalPosition]
   );
 
+  /**
+   * Maneja el evento de movimiento del ratón para el arrastre.
+   * @param e El evento de movimiento del ratón.
+   */
   const handleMouseMove = useCallback(
     (e: MouseEvent) => {
       if (isDragging) {
@@ -45,10 +58,16 @@ export const useSynchronizedDragZoom = () => {
     [isDragging]
   );
 
+  /**
+   * Maneja el evento de soltar el botón del ratón para detener el arrastre.
+   */
   const handleMouseUp = useCallback(() => {
     setIsDragging(false);
   }, []);
 
+  /**
+   * Maneja el evento de doble clic para resetear el zoom y la posición.
+   */
   const handleDoubleClick = useCallback(() => {
     setGlobalScale(1);
     setGlobalPosition({ x: 0, y: 0 });

@@ -11,8 +11,12 @@ import {
 import { useDropzone, type DropzoneState } from "react-dropzone";
 import { useSynchronizedDragZoom } from "../hooks/useSynchronizedDragZoom";
 import { useImageProcessing } from "../hooks/useImageProcessing";
+import { useResizeObserver } from "../hooks/useResizeObserver";
 
-// Tipado para el contexto
+/**
+ * Define el tipo para el contexto de la herramienta de comparación de imágenes.
+ * @interface ImageComparatorContextType
+ */
 interface ImageComparatorContextType {
   image1Url: string | null;
   setImage1Url: (url: string | null) => void;
@@ -54,7 +58,16 @@ const ImageComparatorContext = createContext<
   ImageComparatorContextType | undefined
 >(undefined);
 
-// 2. Crear un hook personalizado para consumir el contexto
+/**
+ * Hook para consumir el contexto de comparación de imágenes.
+ *
+ * @returns {ImageComparatorContextType} El objeto de contexto con toda la lógica y el estado.
+ * @throws {Error} Si se usa fuera de un `ImageComparatorProvider`.
+ * @example
+ * ```
+ * const { image1Url, similarityPercentage } = useImageComparator();
+ * ```
+ */
 export const useImageComparator = () => {
   const context = useContext(ImageComparatorContext);
   if (context === undefined) {
@@ -65,9 +78,13 @@ export const useImageComparator = () => {
   return context;
 };
 
-// 3. Crear el componente proveedor que contendrá toda la lógica de estado
+/**
+ * Componente proveedor que gestiona el estado global y la lógica de la herramienta
+ * de comparación de imágenes.
+ * @param {object} props - Las props del componente.
+ * @param {ReactNode} props.children - Los componentes hijos que tendrán acceso al contexto.
+ */
 const ImageComparatorProvider = ({ children }: { children: ReactNode }) => {
-  // Toda la lógica y el estado de tu componente original se mueven aquí
   const [image1Url, setImage1Url] = useState<string | null>(null);
   const [image2Url, setImage2Url] = useState<string | null>(null);
   const [image1Dimensions, setImage1Dimensions] = useState<{
@@ -85,6 +102,10 @@ const ImageComparatorProvider = ({ children }: { children: ReactNode }) => {
   const containerRef2 = useRef<HTMLDivElement>(null);
   const [image1Zoom, setImage1Zoom] = useState<number | null>(null);
   const [image2Zoom, setImage2Zoom] = useState<number | null>(null);
+  const [containerDimensions, setContainerDimensions] = useState<{
+    width: number;
+    height: number;
+  } | null>(null);
 
   const {
     globalScale,
@@ -108,13 +129,22 @@ const ImageComparatorProvider = ({ children }: { children: ReactNode }) => {
     showBaseImage
   );
 
+  useResizeObserver(containerRef1, setContainerDimensions);
+  useResizeObserver(containerRef2, setContainerDimensions);
+
+  /**
+   * Calcula el porcentaje de zoom de una imagen en relación con el tamaño de su contenedor.
+   * @param imgDims Las dimensiones de la imagen.
+   * @param containerDims Las dimensiones del contenedor.
+   * @returns El porcentaje de zoom o `null` si no hay datos.
+   */
   const calculateZoom = useCallback(
     (
       imgDims: { width: number; height: number } | null,
-      containerRef: React.RefObject<HTMLDivElement | null>
+      containerDims: { width: number; height: number } | null
     ) => {
-      if (imgDims && containerRef.current) {
-        const { clientWidth, clientHeight } = containerRef.current;
+      if (imgDims && containerDims) {
+        const { width: clientWidth, height: clientHeight } = containerDims;
         const { width: imgWidth, height: imgHeight } = imgDims;
         const initialScale = Math.min(
           clientWidth / imgWidth,
@@ -127,60 +157,62 @@ const ImageComparatorProvider = ({ children }: { children: ReactNode }) => {
     [globalScale]
   );
 
+  /**
+   * Sincroniza el cálculo del zoom cada vez que cambian las dimensiones de las imágenes o del contenedor.
+   */
   useEffect(() => {
-    setImage1Zoom(calculateZoom(image1Dimensions, containerRef1));
-    setImage2Zoom(calculateZoom(image2Dimensions, containerRef2));
-  }, [globalScale, image1Dimensions, image2Dimensions, calculateZoom]);
+    setImage1Zoom(calculateZoom(image1Dimensions, containerDimensions));
+    setImage2Zoom(calculateZoom(image2Dimensions, containerDimensions));
+  }, [
+    globalScale,
+    image1Dimensions,
+    image2Dimensions,
+    containerDimensions,
+    calculateZoom,
+  ]);
 
-  const onDrop1 = useCallback(
-    (acceptedFiles: File[]) => {
-      const file = acceptedFiles[0];
-      const reader = new FileReader();
-      reader.onload = () => {
-        const img = new Image();
-        img.onload = () => {
-          const dims = { width: img.width, height: img.height };
-          setImage1Dimensions(dims);
-          setImage1Url(reader.result as string);
-          setImage1Zoom(calculateZoom(dims, containerRef1));
+  /**
+   * Función genérica para manejar la carga de imágenes a través de Dropzone.
+   * @param setterUrl - La función de estado para la URL de la imagen.
+   * @param setterDims - La función de estado para las dimensiones de la imagen.
+   * @returns Un callback para el evento `onDrop` de Dropzone.
+   */
+  const handleImageDrop = useCallback(
+    (
+        setterUrl: (url: string | null) => void,
+        setterDims: (dims: { width: number; height: number } | null) => void
+      ) =>
+      (acceptedFiles: File[]) => {
+        const file = acceptedFiles[0];
+        const reader = new FileReader();
+        reader.onload = () => {
+          const img = new Image();
+          img.onload = () => {
+            const dims = { width: img.width, height: img.height };
+            setterDims(dims);
+            setterUrl(reader.result as string);
+          };
+          img.src = reader.result as string;
         };
-        img.src = reader.result as string;
-      };
-      reader.readAsDataURL(file);
-    },
-    [calculateZoom]
-  );
-
-  const onDrop2 = useCallback(
-    (acceptedFiles: File[]) => {
-      const file = acceptedFiles[0];
-      const reader = new FileReader();
-      reader.onload = () => {
-        const img = new Image();
-        img.onload = () => {
-          const dims = { width: img.width, height: img.height };
-          setImage2Dimensions(dims);
-          setImage2Url(reader.result as string);
-          setImage2Zoom(calculateZoom(dims, containerRef2));
-        };
-        img.src = reader.result as string;
-      };
-      reader.readAsDataURL(file);
-    },
-    [calculateZoom]
+        reader.readAsDataURL(file);
+      },
+    []
   );
 
   const dropzoneProps1 = useDropzone({
-    onDrop: onDrop1,
+    onDrop: handleImageDrop(setImage1Url, setImage1Dimensions),
     noClick: true,
     accept: { "image/*": [] },
   });
   const dropzoneProps2 = useDropzone({
-    onDrop: onDrop2,
+    onDrop: handleImageDrop(setImage2Url, setImage2Dimensions),
     noClick: true,
     accept: { "image/*": [] },
   });
 
+  /**
+   * Intercambia las URLs y dimensiones de las imágenes 1 y 2.
+   */
   const handleSwapImages = useCallback(() => {
     setImage1Url(image2Url);
     setImage2Url(image1Url);
@@ -193,7 +225,6 @@ const ImageComparatorProvider = ({ children }: { children: ReactNode }) => {
     return similarityPercentage !== null ? 100 - similarityPercentage : null;
   }, [similarityPercentage]);
 
-  // 4. Se define el objeto de valor que se pasará a los componentes
   const value = {
     image1Url,
     setImage1Url,

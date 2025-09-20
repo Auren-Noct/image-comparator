@@ -1,10 +1,8 @@
 import { useImageComparator } from "../context/ImageComparatorContext";
 
 /**
- * @description
- * Componente que renderiza el botón para intercambiar la primera y segunda imagen.
- * Obtiene la lógica y el estado directamente del contexto.
- * @returns {JSX.Element | null} El botón de intercambio o null si las imágenes no están cargadas.
+ * Componente que renderiza un botón para intercambiar la primera y segunda imagen.
+ * @returns Un elemento JSX con el botón de intercambio, o `null` si las imágenes no están cargadas.
  */
 const ImageSwapButton = () => {
   const { image1Url, image2Url, handleSwapImages } = useImageComparator();

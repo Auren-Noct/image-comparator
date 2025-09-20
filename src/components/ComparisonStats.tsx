@@ -1,10 +1,9 @@
 import { useImageComparator } from "../context/ImageComparatorContext";
 
 /**
- * @description
  * Componente que muestra los porcentajes de similitud y diferencia entre las imágenes.
- * Obtiene los valores directamente del contexto.
- * @returns {JSX.Element} Un div con las estadísticas de comparación.
+ * Obtiene los valores directamente del contexto `ImageComparatorContext`.
+ * @returns Un elemento JSX que muestra las estadísticas de la comparación.
  */
 const ComparisonStats = () => {
   const { similarityPercentage, differencePercentage } = useImageComparator();

@@ -1,11 +1,9 @@
 import { useImageComparator } from "../context/ImageComparatorContext";
 
 /**
- * @description
- * Componente que renderiza los checkboxes para controlar la visibilidad
- * de la imagen de base, similitudes y diferencias. Obtiene su estado
- * y la lógica de actualización directamente del contexto.
- * @returns {JSX.Element} Un div con los checkboxes.
+ * Componente que renderiza los checkboxes para controlar la visibilidad de la imagen de base,
+ * similitudes y diferencias.
+ * @returns Un elemento JSX con los checkboxes de opciones.
  */
 const ImageOptions = () => {
   const {

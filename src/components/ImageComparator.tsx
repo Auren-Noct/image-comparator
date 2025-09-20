@@ -6,10 +6,9 @@ import ComparisonStats from "./ComparisonStats";
 import ImageOptions from "./ImageOptions";
 
 /**
- * @description
- * Componente principal que contiene la UI para la comparación de imágenes.
- * Toda la lógica de estado se ha movido a un contexto.
- * @returns {JSX.Element}
+ * Componente principal que contiene la interfaz de usuario para la comparación de imágenes.
+ * Toda la lógica de estado y gestión de datos se maneja a través del contexto.
+ * @returns Un elemento JSX con la estructura de la aplicación.
  */
 const ImageComparator = () => {
   const {
@@ -112,15 +111,11 @@ const ImageComparator = () => {
             </div>
           </DraggableImage>
 
-          {/* Nuevo componente para mostrar las estadísticas */}
           <ComparisonStats />
-
-          {/* Nuevo componente para los checkboxes de opciones */}
           <ImageOptions />
         </div>
       )}
 
-      {/* Nuevo componente para el botón de intercambio */}
       <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 flex gap-4">
         <ImageSwapButton />
       </div>
