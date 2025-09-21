@@ -1,6 +1,7 @@
 import type { DropzoneState } from "react-dropzone";
 import DraggableImage from "./DraggableImage";
 import { useRef } from "react";
+import { useTheme } from "../context/ThemeContext";
 
 /**
  * Propiedades para el componente ImageDropZone.
@@ -65,6 +66,7 @@ const ImageDropZone = ({
   handleMouseDown,
 }: ImageDropZoneProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const { darkMode } = useTheme();
 
   return (
     <div
@@ -93,7 +95,11 @@ const ImageDropZone = ({
           </div>
         </>
       ) : (
-        <p className="text-gray-500 text-center font-bold select-none p-4">
+        <p
+          className={`text-center font-bold select-none p-4 ${
+            darkMode ? "text-gray-400" : "text-gray-500"
+          }`}
+        >
           Arrastra y suelta aquí la{" "}
           <span className={titleColorClass}>{title}</span>
         </p>

@@ -4,6 +4,7 @@ import DraggableImage from "./DraggableImage";
 import ImageSwapButton from "./ImageSwapButton";
 import ComparisonStats from "./ComparisonStats";
 import ImageOptions from "./ImageOptions";
+import { useTheme } from "../context/ThemeContext";
 
 /**
  * Componente principal que contiene la interfaz de usuario para la comparación de imágenes.
@@ -34,20 +35,23 @@ const ImageComparator = () => {
   } = useImageComparator();
 
   const containerClass = isSecondImageLoaded ? "w-1/3" : "w-1/2";
+  const { darkMode } = useTheme();
 
   return (
     <div
-      className="flex flex-col h-full md:flex-row bg-gray-100 gap-0"
+      className="flex flex-col h-full md:flex-row gap-0 flex-grow"
       onDoubleClick={handleDoubleClick}
     >
       <canvas ref={tempCanvasRef} style={{ display: "none" }}></canvas>
       <canvas ref={comparisonCanvasRef} style={{ display: "none" }}></canvas>
 
-      <div className="flex flex-row h-screen w-full gap-0">
+      <div className="flex flex-row w-full gap-0 flex-grow">
         {/* Primer Drag and Drop */}
         <div
           ref={containerRef1}
-          className={`${containerClass} h-full transition-all duration-500 rounded-lg shadow-lg flex flex-col justify-center items-center bg-white`}
+          className={`${containerClass} h-full transition-all duration-500 rounded-lg shadow-lg flex flex-col justify-center items-center ${
+            darkMode ? "bg-gray-800" : "bg-white"
+          }`}
         >
           <ImageDropZone
             imageURL={image1Url}
@@ -66,7 +70,9 @@ const ImageComparator = () => {
         {/* Segundo Drag and Drop */}
         <div
           ref={containerRef2}
-          className={`${containerClass} h-full transition-all duration-500 rounded-lg shadow-lg flex flex-col justify-center items-center bg-white`}
+          className={`${containerClass} h-full transition-all duration-500 rounded-lg shadow-lg flex flex-col justify-center items-center ${
+            darkMode ? "bg-gray-800" : "bg-white"
+          }`}
         >
           <ImageDropZone
             imageURL={image2Url}
@@ -85,7 +91,9 @@ const ImageComparator = () => {
         {/* Imagen de Comparación */}
         {isSecondImageLoaded && (
           <div
-            className={`${containerClass} h-full transition-all duration-500 rounded-lg shadow-lg flex flex-col justify-center items-center bg-white relative`}
+            className={`${containerClass} h-full transition-all duration-500 rounded-lg shadow-lg flex flex-col justify-center items-center ${
+              darkMode ? "bg-gray-800" : "bg-white"
+            } relative`}
           >
             <DraggableImage
               scale={globalScale}
