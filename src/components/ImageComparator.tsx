@@ -1,10 +1,14 @@
-import { useImageComparator } from "../context/ImageComparatorContext";
+import { useImageActions, useImageData } from "../context/ImageDataContext";
+import { useMemo } from "react";
+import { useViewport, useViewportActions } from "../context/ViewportContext";
+import { useComparisonResult } from "../context/ComparisonResultContext";
+import { useViewOptions } from "../context/ViewOptionsContext";
+import { useTheme } from "../context/ThemeContext";
 import ImageDropZone from "./ImageDropZone";
 import DraggableImage from "./DraggableImage";
 import ImageSwapButton from "./ImageSwapButton";
 import ComparisonStats from "./ComparisonStats";
 import ImageOptions from "./ImageOptions";
-import { useTheme } from "../context/ThemeContext";
 
 /**
  * Componente principal que contiene la interfaz de usuario para la comparación de imágenes.
@@ -12,10 +16,9 @@ import { useTheme } from "../context/ThemeContext";
  * @returns Un elemento JSX con la estructura de la aplicación.
  */
 const ImageComparator = () => {
+  const { image1Url, image2Url, isSecondImageLoaded } = useImageData();
+  const { dropzoneProps1, dropzoneProps2 } = useImageActions();
   const {
-    image1Url,
-    image2Url,
-    showBaseImage,
     containerRef1,
     containerRef2,
     image1Zoom,
@@ -23,19 +26,37 @@ const ImageComparator = () => {
     globalScale,
     globalPosition,
     isDragging,
-    handleWheel,
-    handleMouseDown,
-    handleDoubleClick,
-    comparisonImageUrl,
-    tempCanvasRef,
-    comparisonCanvasRef,
-    dropzoneProps1,
-    dropzoneProps2,
-    isSecondImageLoaded,
-  } = useImageComparator();
+  } = useViewport();
+  const { handleDoubleClick, handleWheel, handleMouseDown } =
+    useViewportActions();
+  const { comparisonImageUrl, tempCanvasRef, comparisonCanvasRef } =
+    useComparisonResult();
+  const { showBaseImage } = useViewOptions();
 
   const containerClass = isSecondImageLoaded ? "w-1/3" : "w-1/2";
   const { darkMode } = useTheme();
+
+  const comparisonImageContent = useMemo(
+    () => (
+      <div className="relative w-full h-full">
+        {showBaseImage && image1Url && (
+          <img
+            src={image1Url}
+            alt="Imagen de Fondo"
+            className="absolute inset-0 w-full h-full object-contain pointer-events-none"
+          />
+        )}
+        {comparisonImageUrl && (
+          <img
+            src={comparisonImageUrl}
+            alt="Imagen de Comparación"
+            className="absolute inset-0 w-full h-full object-contain"
+          />
+        )}
+      </div>
+    ),
+    [showBaseImage, image1Url, comparisonImageUrl]
+  );
 
   return (
     <div
@@ -58,11 +79,6 @@ const ImageComparator = () => {
             dropzoneProps={dropzoneProps1}
             title="primera imagen"
             titleColorClass="text-blue-500"
-            globalScale={globalScale}
-            globalPosition={globalPosition}
-            isDragging={isDragging}
-            handleWheel={handleWheel}
-            handleMouseDown={handleMouseDown}
             zoomPercentage={image1Zoom}
           />
         </div>
@@ -79,11 +95,6 @@ const ImageComparator = () => {
             dropzoneProps={dropzoneProps2}
             title="segunda imagen"
             titleColorClass="text-green-500"
-            globalScale={globalScale}
-            globalPosition={globalPosition}
-            isDragging={isDragging}
-            handleWheel={handleWheel}
-            handleMouseDown={handleMouseDown}
             zoomPercentage={image2Zoom}
           />
         </div>
@@ -102,22 +113,7 @@ const ImageComparator = () => {
               onMouseDown={handleMouseDown}
               isDragging={isDragging}
             >
-              <div className="relative w-full h-full">
-                {showBaseImage && image1Url && (
-                  <img
-                    src={image1Url}
-                    alt="Imagen de Fondo"
-                    className="absolute inset-0 w-full h-full object-contain pointer-events-none"
-                  />
-                )}
-                {comparisonImageUrl && (
-                  <img
-                    src={comparisonImageUrl}
-                    alt="Imagen de Comparación"
-                    className="absolute inset-0 w-full h-full object-contain"
-                  />
-                )}
-              </div>
+              {comparisonImageContent}
             </DraggableImage>
 
             <ComparisonStats />

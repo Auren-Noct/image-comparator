@@ -1,11 +1,13 @@
-import { useImageComparator } from "../context/ImageComparatorContext";
+import { useImageActions, useImageData } from "../context/ImageDataContext";
+import { memo } from "react";
 
 /**
  * Componente que renderiza un botón para intercambiar la primera y segunda imagen.
  * @returns Un elemento JSX con el botón de intercambio, o `null` si las imágenes no están cargadas.
  */
 const ImageSwapButton = () => {
-  const { image1Url, image2Url, handleSwapImages } = useImageComparator();
+  const { image1Url, image2Url } = useImageData();
+  const { handleSwapImages } = useImageActions();
 
   // El botón solo se muestra cuando ambas imágenes están cargadas.
   if (!image1Url || !image2Url) {
@@ -22,4 +24,4 @@ const ImageSwapButton = () => {
   );
 };
 
-export default ImageSwapButton;
+export default memo(ImageSwapButton);

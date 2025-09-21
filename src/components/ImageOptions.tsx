@@ -1,5 +1,6 @@
-import { useImageComparator } from "../context/ImageComparatorContext";
+import { useViewOptions } from "../context/ViewOptionsContext";
 import { useTheme } from "../context/ThemeContext";
+import CheckboxOption from "./CheckboxOption";
 
 /**
  * Componente que renderiza los checkboxes para controlar la visibilidad de la imagen de base,
@@ -14,7 +15,7 @@ const ImageOptions = () => {
     setShowSimilarities,
     showDifferences,
     setShowDifferences,
-  } = useImageComparator();
+  } = useViewOptions();
   const { darkMode } = useTheme();
 
   return (
@@ -23,45 +24,21 @@ const ImageOptions = () => {
         darkMode ? "bg-gray-700" : "bg-white bg-opacity-75"
       }`}
     >
-      <label
-        className={`inline-flex items-center text-sm font-medium cursor-pointer ${
-          darkMode ? "text-gray-200" : "text-gray-800"
-        }`}
-      >
-        <input
-          type="checkbox"
-          checked={showBaseImage}
-          onChange={(e) => setShowBaseImage(e.target.checked)}
-          className="form-checkbox text-blue-600 rounded"
-        />
-        <span className="ml-2">Mostrar Fondo</span>
-      </label>
-      <label
-        className={`inline-flex items-center text-sm font-medium cursor-pointer ${
-          darkMode ? "text-gray-200" : "text-gray-800"
-        }`}
-      >
-        <input
-          type="checkbox"
-          checked={showSimilarities}
-          onChange={(e) => setShowSimilarities(e.target.checked)}
-          className="form-checkbox text-blue-600 rounded"
-        />
-        <span className="ml-2">Mostrar Similitudes</span>
-      </label>
-      <label
-        className={`inline-flex items-center text-sm font-medium cursor-pointer ${
-          darkMode ? "text-gray-200" : "text-gray-800"
-        }`}
-      >
-        <input
-          type="checkbox"
-          checked={showDifferences}
-          onChange={(e) => setShowDifferences(e.target.checked)}
-          className="form-checkbox text-blue-600 rounded"
-        />
-        <span className="ml-2">Mostrar Diferencias</span>
-      </label>
+      <CheckboxOption
+        label="Mostrar Fondo"
+        checked={showBaseImage}
+        onChange={(e) => setShowBaseImage(e.target.checked)}
+      />
+      <CheckboxOption
+        label="Mostrar Similitudes"
+        checked={showSimilarities}
+        onChange={(e) => setShowSimilarities(e.target.checked)}
+      />
+      <CheckboxOption
+        label="Mostrar Diferencias"
+        checked={showDifferences}
+        onChange={(e) => setShowDifferences(e.target.checked)}
+      />
     </div>
   );
 };

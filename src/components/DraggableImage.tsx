@@ -5,6 +5,7 @@ import {
   type MouseEvent,
   cloneElement,
 } from "react";
+import { memo } from "react";
 
 /**
  * Propiedades para el componente DraggableImage.
@@ -69,4 +70,4 @@ const DraggableImage = ({
   );
 };
 
-export default DraggableImage;
+export default memo(DraggableImage);

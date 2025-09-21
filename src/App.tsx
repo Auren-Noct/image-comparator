@@ -6,8 +6,8 @@ import Header from "./components/Header";
 function App() {
   return (
     <ThemeProvider>
-      <Header />
       <ImageComparatorProvider>
+        <Header />
         <ImageComparator />
       </ImageComparatorProvider>
     </ThemeProvider>

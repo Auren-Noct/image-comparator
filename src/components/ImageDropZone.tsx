@@ -1,6 +1,7 @@
 import type { DropzoneState } from "react-dropzone";
 import DraggableImage from "./DraggableImage";
-import { useRef } from "react";
+import { memo } from "react";
+import { useViewport, useViewportActions } from "../context/ViewportContext";
 import { useTheme } from "../context/ThemeContext";
 
 /**
@@ -27,26 +28,6 @@ interface ImageDropZoneProps {
    * El porcentaje de zoom actual de la imagen.
    */
   zoomPercentage: number | null;
-  /**
-   * El factor de escala global para el zoom sincronizado.
-   */
-  globalScale: number;
-  /**
-   * La posición global de arrastre.
-   */
-  globalPosition: { x: number; y: number };
-  /**
-   * Indica si el usuario está arrastrando la imagen.
-   */
-  isDragging: boolean;
-  /**
-   * Manejador del evento de rueda del ratón para el zoom.
-   */
-  handleWheel: (e: React.WheelEvent<HTMLDivElement>) => void;
-  /**
-   * Manejador del evento de clic del ratón para iniciar el arrastre.
-   */
-  handleMouseDown: (e: React.MouseEvent<HTMLDivElement>) => void;
 }
 
 /**
@@ -59,18 +40,13 @@ const ImageDropZone = ({
   title,
   titleColorClass,
   zoomPercentage,
-  globalScale,
-  globalPosition,
-  isDragging,
-  handleWheel,
-  handleMouseDown,
 }: ImageDropZoneProps) => {
-  const containerRef = useRef<HTMLDivElement>(null);
   const { darkMode } = useTheme();
+  const { globalScale, globalPosition, isDragging } = useViewport();
+  const { handleWheel, handleMouseDown } = useViewportActions();
 
   return (
     <div
-      ref={containerRef}
       className="relative w-full h-full flex flex-col items-center justify-center"
       {...dropzoneProps.getRootProps()}
     >
@@ -108,4 +84,4 @@ const ImageDropZone = ({
   );
 };
 
-export default ImageDropZone;
+export default memo(ImageDropZone);

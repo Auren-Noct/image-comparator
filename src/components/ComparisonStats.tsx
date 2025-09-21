@@ -1,13 +1,17 @@
-import { useImageComparator } from "../context/ImageComparatorContext";
+import { useMemo, memo } from "react";
+import { useComparisonResult } from "../context/ComparisonResultContext";
 import { useTheme } from "../context/ThemeContext";
 
 /**
  * Componente que muestra los porcentajes de similitud y diferencia entre las imágenes.
- * Obtiene los valores directamente del contexto `ImageComparatorContext`.
+ * Obtiene los valores directamente del contexto `ComparisonResultContext`.
  * @returns Un elemento JSX que muestra las estadísticas de la comparación.
  */
 const ComparisonStats = () => {
-  const { similarityPercentage, differencePercentage } = useImageComparator();
+  const { similarityPercentage } = useComparisonResult();
+  const differencePercentage = useMemo(() => {
+    return similarityPercentage !== null ? 100 - similarityPercentage : null;
+  }, [similarityPercentage]);
   const { darkMode } = useTheme();
 
   return (
@@ -34,4 +38,4 @@ const ComparisonStats = () => {
   );
 };
 
-export default ComparisonStats;
+export default memo(ComparisonStats);

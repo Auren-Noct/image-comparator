@@ -19,8 +19,6 @@ interface ThemeContextType {
   toggleTheme: () => void;
 }
 
-// 1. Crear el contexto con un valor por defecto.
-// Se usa 'undefined' para forzar el uso del hook `useTheme` y el `Provider`.
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 /**
