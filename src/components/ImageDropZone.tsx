@@ -66,7 +66,7 @@ const ImageDropZone = ({
               className="h-full w-auto object-contain"
             />
           </DraggableImage>
-          <div className="absolute top-4 left-4 bg-gray-800 text-white text-sm px-2 py-1 rounded-full opacity-75">
+          <div className="absolute top-4 right-4 bg-gray-800 text-white text-sm px-2 py-1 rounded-full opacity-75">
             Zoom: {zoomPercentage !== null ? zoomPercentage.toFixed(0) : "N/A"}%
           </div>
         </>

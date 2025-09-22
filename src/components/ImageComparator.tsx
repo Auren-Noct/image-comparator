@@ -6,9 +6,7 @@ import { useViewOptions } from "../context/ViewOptionsContext";
 import { useTheme } from "../context/ThemeContext";
 import ImageDropZone from "./ImageDropZone";
 import DraggableImage from "./DraggableImage";
-import ImageSwapButton from "./ImageSwapButton";
 import ComparisonStats from "./ComparisonStats";
-import ImageOptions from "./ImageOptions";
 
 /**
  * Componente principal que contiene la interfaz de usuario para la comparación de imágenes.
@@ -117,13 +115,8 @@ const ImageComparator = () => {
             </DraggableImage>
 
             <ComparisonStats />
-            <ImageOptions />
           </div>
         )}
-      </div>
-
-      <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 flex gap-4">
-        <ImageSwapButton />
       </div>
     </div>
   );
