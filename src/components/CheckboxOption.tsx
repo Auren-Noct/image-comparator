@@ -25,7 +25,7 @@ const CheckboxOption = ({ label, checked, onChange }: CheckboxOptionProps) => {
         type="checkbox"
         checked={checked}
         onChange={onChange}
-        className="form-checkbox text-blue-600 rounded"
+        className="form-checkbox text-blue-700 rounded focus:ring-blue-600"
       />
       <span className="ml-2">{label}</span>
     </label>

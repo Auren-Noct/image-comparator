@@ -37,7 +37,7 @@ const Header = () => {
     return (
       <button
         onClick={handleSwapImages}
-        className="px-3 py-1 bg-blue-500 text-white rounded-full font-semibold hover:bg-blue-600 transition-colors text-sm whitespace-nowrap"
+        className="px-3 py-1 bg-blue-700 text-white rounded-full font-semibold hover:bg-blue-800 transition-colors text-sm whitespace-nowrap"
       >
         Intercambiar
       </button>
@@ -63,7 +63,7 @@ const Header = () => {
           Image Comparator
         </h1>
         <button
-          className="px-3 py-1 bg-amber-500 text-white rounded-full font-semibold hover:bg-amber-600 transition-colors text-sm"
+          className="px-3 py-1 bg-amber-600 text-white rounded-full font-semibold hover:bg-amber-700 transition-colors text-sm"
           onClick={handleResetImages}
         >
           Reiniciar App
@@ -75,7 +75,7 @@ const Header = () => {
         {renderSwapButton()}
         <button
           onClick={toggleTheme}
-          className="px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded-full text-gray-800 dark:text-white font-semibold hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors text-sm"
+          className="px-3 py-1 bg-white dark:bg-gray-700 rounded-full text-gray-700 dark:text-white font-semibold hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors text-sm border border-gray-300 dark:border-gray-600"
         >
           {darkMode ? "Modo Claro" : "Modo Oscuro"}
         </button>
@@ -84,7 +84,7 @@ const Header = () => {
         <div className="relative" ref={optionsRef}>
           <button
             onClick={() => setIsOptionsOpen((prev) => !prev)}
-            className="px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded-full text-gray-800 dark:text-white font-semibold hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors text-sm"
+            className="px-3 py-1 bg-white dark:bg-gray-700 rounded-full text-gray-700 dark:text-white font-semibold hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors text-sm border border-gray-300 dark:border-gray-600"
           >
             Opciones
           </button>
@@ -124,7 +124,7 @@ const Header = () => {
         <div className="relative" ref={copyrightRef}>
           <button
             onClick={() => setIsCopyrightOpen((prev) => !prev)}
-            className="px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded-full text-gray-800 dark:text-white font-semibold hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors text-sm"
+            className="px-3 py-1 bg-white dark:bg-gray-700 rounded-full text-gray-700 dark:text-white font-semibold hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors text-sm border border-gray-300 dark:border-gray-600"
           >
             Acerca de
           </button>

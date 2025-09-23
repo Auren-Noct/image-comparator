@@ -74,14 +74,18 @@ const ImageDropZone = ({
             />
           </DraggableImage>
           {showDetails && <ImageDetailsOverlay imageInfo={imageInfo} />}
-          <div className="absolute top-4 right-4 bg-gray-800 text-white text-sm px-2 py-1 rounded-full opacity-75">
+          <div
+            className={`absolute top-4 right-4 text-sm px-2 py-1 rounded-full opacity-75 ${
+              darkMode ? "bg-gray-700 text-white" : "bg-gray-800 text-white"
+            }`}
+          >
             Zoom: {zoomPercentage !== null ? zoomPercentage.toFixed(0) : "N/A"}%
           </div>
         </>
       ) : (
         <p
           className={`text-center font-bold select-none p-4 ${
-            darkMode ? "text-gray-400" : "text-gray-500"
+            darkMode ? "text-gray-400" : "text-gray-700"
           }`}
         >
           Arrastra y suelta aquí la{" "}

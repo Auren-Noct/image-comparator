@@ -77,7 +77,7 @@ const ImageComparator = () => {
             dropzoneProps={dropzoneProps1}
             showDetails={showDetails}
             title="primera imagen"
-            titleColorClass="text-blue-500"
+            titleColorClass="text-blue-700"
             zoomPercentage={image1Zoom}
           />
         </div>
@@ -94,7 +94,7 @@ const ImageComparator = () => {
             dropzoneProps={dropzoneProps2}
             showDetails={showDetails}
             title="segunda imagen"
-            titleColorClass="text-green-500"
+            titleColorClass="text-green-700"
             zoomPercentage={image2Zoom}
           />
         </div>

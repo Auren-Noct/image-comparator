@@ -1,4 +1,5 @@
 import type { ImageInfo } from "../context/ImageDataContext";
+import { useTheme } from "../context/ThemeContext";
 
 interface ImageDetailsOverlayProps {
   imageInfo: ImageInfo;
@@ -24,8 +25,13 @@ const formatBytes = (bytes: number, decimals = 2) => {
  * @returns Un elemento JSX con los detalles de la imagen.
  */
 const ImageDetailsOverlay = ({ imageInfo }: ImageDetailsOverlayProps) => {
+  const { darkMode } = useTheme();
   return (
-    <div className="absolute top-4 left-4 bg-gray-800 text-white text-xs px-2 py-1 rounded-lg opacity-85 select-none max-w-xs">
+    <div
+      className={`absolute top-4 left-4 text-white text-xs px-2 py-1 rounded-lg opacity-85 select-none max-w-xs ${
+        darkMode ? "bg-gray-700" : "bg-gray-800"
+      }`}
+    >
       <ul className="flex flex-col gap-1">
         <li className="flex items-center gap-1" title={imageInfo.name}>
           <strong>Nombre:</strong>
