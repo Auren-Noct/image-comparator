@@ -82,7 +82,7 @@ export const ViewportProvider = ({ children }: { children: ReactNode }) => {
     height: number;
   } | null>(null);
 
-  const { image1Dimensions, image2Dimensions } = useImageData();
+  const { image1, image2 } = useImageData();
 
   const {
     globalScale,
@@ -115,15 +115,16 @@ export const ViewportProvider = ({ children }: { children: ReactNode }) => {
   );
 
   useEffect(() => {
+    const image1Dimensions = image1
+      ? { width: image1.width, height: image1.height }
+      : null;
+    const image2Dimensions = image2
+      ? { width: image2.width, height: image2.height }
+      : null;
+
     setImage1Zoom(calculateZoom(image1Dimensions, containerDimensions));
     setImage2Zoom(calculateZoom(image2Dimensions, containerDimensions));
-  }, [
-    globalScale,
-    image1Dimensions,
-    image2Dimensions,
-    containerDimensions,
-    calculateZoom,
-  ]);
+  }, [globalScale, image1, image2, containerDimensions, calculateZoom]);
 
   const stateValue = useMemo(
     () => ({

@@ -14,7 +14,7 @@ import ComparisonStats from "./ComparisonStats";
  * @returns Un elemento JSX con la estructura de la aplicación.
  */
 const ImageComparator = () => {
-  const { image1Url, image2Url, isSecondImageLoaded } = useImageData();
+  const { image1, image2, isSecondImageLoaded } = useImageData();
   const { dropzoneProps1, dropzoneProps2 } = useImageActions();
   const {
     containerRef1,
@@ -29,7 +29,7 @@ const ImageComparator = () => {
     useViewportActions();
   const { comparisonImageUrl, tempCanvasRef, comparisonCanvasRef } =
     useComparisonResult();
-  const { showBaseImage } = useViewOptions();
+  const { showBaseImage, showDetails } = useViewOptions();
 
   const containerClass = isSecondImageLoaded ? "w-1/3" : "w-1/2";
   const { darkMode } = useTheme();
@@ -37,9 +37,9 @@ const ImageComparator = () => {
   const comparisonImageContent = useMemo(
     () => (
       <div className="relative w-full h-full">
-        {showBaseImage && image1Url && (
+        {showBaseImage && image1 && (
           <img
-            src={image1Url}
+            src={image1.url}
             alt="Imagen de Fondo"
             className="absolute inset-0 w-full h-full object-contain pointer-events-none"
           />
@@ -53,7 +53,7 @@ const ImageComparator = () => {
         )}
       </div>
     ),
-    [showBaseImage, image1Url, comparisonImageUrl]
+    [showBaseImage, image1, comparisonImageUrl]
   );
 
   return (
@@ -73,8 +73,9 @@ const ImageComparator = () => {
           }`}
         >
           <ImageDropZone
-            imageURL={image1Url}
+            imageInfo={image1}
             dropzoneProps={dropzoneProps1}
+            showDetails={showDetails}
             title="primera imagen"
             titleColorClass="text-blue-500"
             zoomPercentage={image1Zoom}
@@ -89,8 +90,9 @@ const ImageComparator = () => {
           }`}
         >
           <ImageDropZone
-            imageURL={image2Url}
+            imageInfo={image2}
             dropzoneProps={dropzoneProps2}
+            showDetails={showDetails}
             title="segunda imagen"
             titleColorClass="text-green-500"
             zoomPercentage={image2Zoom}

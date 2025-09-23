@@ -9,24 +9,35 @@ import {
 import { useDropzone, type DropzoneState } from "react-dropzone";
 
 /**
- * Define el estado de los datos de las imágenes.
+ * Información detallada de una imagen cargada.
+ */
+export interface ImageInfo {
+  url: string;
+  name: string;
+  size: number;
+  type: string;
+  lastModified: number;
+  width: number;
+  height: number;
+}
+
+/**
+ * Estado de los datos de las imágenes.
  */
 interface ImageDataState {
-  image1Url: string | null;
-  image2Url: string | null;
-  image1Dimensions: { width: number; height: number } | null;
-  image2Dimensions: { width: number; height: number } | null;
+  image1: ImageInfo | null;
+  image2: ImageInfo | null;
   isSecondImageLoaded: boolean;
 }
 
 /**
- * Define las acciones que se pueden realizar sobre las imágenes.
+ * Acciones disponibles para manipular las imágenes.
  */
 interface ImageActions {
-  handleSwapImages: () => void;
-  handleResetImages: () => void;
   dropzoneProps1: DropzoneState;
   dropzoneProps2: DropzoneState;
+  handleResetImages: () => void;
+  handleSwapImages: () => void;
 }
 
 const ImageDataContext = createContext<ImageDataState | undefined>(undefined);
@@ -68,91 +79,72 @@ export const useImageActions = () => {
  * @param {ReactNode} props.children - Los componentes hijos que tendrán acceso al contexto.
  */
 export const ImageDataProvider = ({ children }: { children: ReactNode }) => {
-  const [image1Url, setImage1Url] = useState<string | null>(null);
-  const [image2Url, setImage2Url] = useState<string | null>(null);
-  const [image1Dimensions, setImage1Dimensions] = useState<{
-    width: number;
-    height: number;
-  } | null>(null);
-  const [image2Dimensions, setImage2Dimensions] = useState<{
-    width: number;
-    height: number;
-  } | null>(null);
+  const [image1, setImage1] = useState<ImageInfo | null>(null);
+  const [image2, setImage2] = useState<ImageInfo | null>(null);
 
-  const handleImageDrop = useCallback(
-    (
-        setterUrl: (url: string | null) => void,
-        setterDims: (dims: { width: number; height: number } | null) => void
-      ) =>
-      (acceptedFiles: File[]) => {
-        const file = acceptedFiles[0];
-        if (!file) return;
-
-        const reader = new FileReader();
-        reader.onload = () => {
-          const img = new Image();
-          img.onload = () => {
-            const dims = { width: img.width, height: img.height };
-            setterDims(dims);
-            setterUrl(reader.result as string);
+  const handleFile = useCallback(
+    (file: File, setImage: (info: ImageInfo | null) => void) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          const imageInfo: ImageInfo = {
+            url: img.src,
+            name: file.name,
+            size: file.size,
+            type: file.type,
+            lastModified: file.lastModified,
+            width: img.width,
+            height: img.height,
           };
-          img.src = reader.result as string;
+          setImage(imageInfo);
         };
-        reader.readAsDataURL(file);
-      },
+        img.src = e.target?.result as string;
+      };
+      reader.readAsDataURL(file);
+    },
     []
   );
 
-  const dropzoneProps1 = useDropzone({
-    onDrop: handleImageDrop(setImage1Url, setImage1Dimensions),
-    noClick: true,
-    accept: { "image/*": [] },
-  });
-
-  const dropzoneProps2 = useDropzone({
-    onDrop: handleImageDrop(setImage2Url, setImage2Dimensions),
-    noClick: true,
-    accept: { "image/*": [] },
-  });
-
-  const handleSwapImages = useCallback(() => {
-    setImage1Url(image2Url);
-    setImage2Url(image1Url);
-    setImage1Dimensions(image2Dimensions);
-    setImage2Dimensions(image1Dimensions);
-  }, [image1Url, image2Url, image1Dimensions, image2Dimensions]);
-
-  const handleResetImages = useCallback(() => {
-    setImage1Url(null);
-    setImage2Url(null);
-    setImage1Dimensions(null);
-    setImage2Dimensions(null);
-  }, []);
-
-  const dataValue = useMemo(
-    () => ({
-      image1Url,
-      image2Url,
-      image1Dimensions,
-      image2Dimensions,
-      isSecondImageLoaded: image2Url !== null,
-    }),
-    [image1Url, image2Url, image1Dimensions, image2Dimensions]
+  const onDrop1 = useCallback(
+    (acceptedFiles: File[]) => handleFile(acceptedFiles[0], setImage1),
+    [handleFile]
+  );
+  const onDrop2 = useCallback(
+    (acceptedFiles: File[]) => handleFile(acceptedFiles[0], setImage2),
+    [handleFile]
   );
 
-  const actionsValue = useMemo(
+  const dropzoneProps1 = useDropzone({ onDrop: onDrop1, noClick: true });
+  const dropzoneProps2 = useDropzone({ onDrop: onDrop2, noClick: true });
+
+  const handleResetImages = useCallback(() => {
+    setImage1(null);
+    setImage2(null);
+  }, []);
+
+  const handleSwapImages = useCallback(() => {
+    setImage1(image2);
+    setImage2(image1);
+  }, [image1, image2]);
+
+  const imageDataValue = useMemo(
+    () => ({ image1, image2, isSecondImageLoaded: !!image2 }),
+    [image1, image2]
+  );
+  const imageActionsValue = useMemo(
     () => ({
-      handleSwapImages,
-      handleResetImages,
       dropzoneProps1,
       dropzoneProps2,
+      handleResetImages,
+      handleSwapImages,
     }),
-    [handleSwapImages, handleResetImages, dropzoneProps1, dropzoneProps2]
+    [dropzoneProps1, dropzoneProps2, handleResetImages, handleSwapImages]
   );
 
   return (
-    <ImageDataContext.Provider value={dataValue}>
-      <ImageActionsContext.Provider value={actionsValue}>
+    <ImageDataContext.Provider value={imageDataValue}>
+      <ImageActionsContext.Provider value={imageActionsValue}>
         {children}
       </ImageActionsContext.Provider>
     </ImageDataContext.Provider>

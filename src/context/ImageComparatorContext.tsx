@@ -10,7 +10,7 @@ import { ComparisonResultProvider } from "./ComparisonResultContext";
  * Cada proveedor gestiona una parte específica del estado, mejorando el rendimiento y la separación de concerns.
  */
 const ImageComparatorOrchestrator = ({ children }: { children: ReactNode }) => {
-  const { image1Url, image2Url } = useImageData();
+  const { image1, image2 } = useImageData();
   const { showSimilarities, showDifferences, showBaseImage } = useViewOptions();
 
   const {
@@ -19,8 +19,8 @@ const ImageComparatorOrchestrator = ({ children }: { children: ReactNode }) => {
     tempCanvasRef,
     comparisonCanvasRef,
   } = useImageProcessing(
-    image1Url,
-    image2Url,
+    image1?.url ?? null,
+    image2?.url ?? null,
     showSimilarities,
     showDifferences,
     showBaseImage

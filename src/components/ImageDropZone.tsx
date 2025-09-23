@@ -3,19 +3,25 @@ import DraggableImage from "./DraggableImage";
 import { memo } from "react";
 import { useViewport, useViewportActions } from "../context/ViewportContext";
 import { useTheme } from "../context/ThemeContext";
+import type { ImageInfo } from "../context/ImageDataContext";
+import ImageDetailsOverlay from "./ImageDetailsOverlay";
 
 /**
  * Propiedades para el componente ImageDropZone.
  */
 interface ImageDropZoneProps {
   /**
-   * La URL de la imagen a mostrar.
+   * El objeto con la información de la imagen a mostrar.
    */
-  imageURL: string | null;
+  imageInfo: ImageInfo | null;
   /**
    * Las propiedades de Dropzone para la zona de arrastre.
    */
   dropzoneProps: DropzoneState;
+  /**
+   * Indica si se deben mostrar los detalles de la imagen.
+   */
+  showDetails: boolean;
   /**
    * El título que se muestra en la zona de arrastre.
    */
@@ -35,8 +41,9 @@ interface ImageDropZoneProps {
  * @returns Un elemento JSX que representa la zona de carga de imágenes.
  */
 const ImageDropZone = ({
-  imageURL,
+  imageInfo,
   dropzoneProps,
+  showDetails,
   title,
   titleColorClass,
   zoomPercentage,
@@ -51,7 +58,7 @@ const ImageDropZone = ({
       {...dropzoneProps.getRootProps()}
     >
       <input {...dropzoneProps.getInputProps()} />
-      {imageURL ? (
+      {imageInfo ? (
         <>
           <DraggableImage
             scale={globalScale}
@@ -61,11 +68,12 @@ const ImageDropZone = ({
             isDragging={isDragging}
           >
             <img
-              src={imageURL}
+              src={imageInfo.url}
               alt={title}
               className="h-full w-auto object-contain"
             />
           </DraggableImage>
+          {showDetails && <ImageDetailsOverlay imageInfo={imageInfo} />}
           <div className="absolute top-4 right-4 bg-gray-800 text-white text-sm px-2 py-1 rounded-full opacity-75">
             Zoom: {zoomPercentage !== null ? zoomPercentage.toFixed(0) : "N/A"}%
           </div>

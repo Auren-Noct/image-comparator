@@ -1,8 +1,9 @@
-import { useState, memo, useRef, useEffect } from "react";
+import { useState, memo, useRef } from "react";
 import { useImageActions, useImageData } from "../context/ImageDataContext";
 import { useTheme } from "../context/ThemeContext";
 import { useViewOptions } from "../context/ViewOptionsContext";
 import CheckboxOption from "./CheckboxOption";
+import { useClickOutside } from "../hooks/useClickOutside";
 
 /**
  * Componente de cabecera unificado que centraliza todas las acciones y opciones.
@@ -11,7 +12,7 @@ import CheckboxOption from "./CheckboxOption";
 const Header = () => {
   // --- Hooks de Contexto ---
   const { handleResetImages, handleSwapImages } = useImageActions();
-  const { image1Url, image2Url } = useImageData();
+  const { image1, image2 } = useImageData();
   const { darkMode, toggleTheme } = useTheme();
   const {
     showBaseImage,
@@ -20,6 +21,8 @@ const Header = () => {
     setShowSimilarities,
     showDifferences,
     setShowDifferences,
+    showDetails,
+    setShowDetails,
   } = useViewOptions();
 
   // --- Estado Local ---
@@ -28,7 +31,7 @@ const Header = () => {
 
   // --- Renderizado Condicional del Botón de Intercambio ---
   const renderSwapButton = () => {
-    if (!image1Url || !image2Url) {
+    if (!image1 || !image2) {
       return null;
     }
     return (
@@ -41,25 +44,12 @@ const Header = () => {
     );
   };
 
-  // --- Hook para cerrar el copyright al hacer clic fuera ---
-  const copyrightRef = useRef<HTMLDivElement>(null);
+  // --- Hooks para cerrar menús al hacer clic fuera ---
+  const copyrightRef = useRef<HTMLDivElement | null>(null);
+  const optionsRef = useRef<HTMLDivElement | null>(null);
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        copyrightRef.current &&
-        !copyrightRef.current.contains(event.target as Node)
-      ) {
-        setIsCopyrightOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [copyrightRef]);
+  useClickOutside(copyrightRef, () => setIsCopyrightOpen(false));
+  useClickOutside(optionsRef, () => setIsOptionsOpen(false));
 
   return (
     <header
@@ -91,7 +81,7 @@ const Header = () => {
         </button>
 
         {/* --- Menú Desplegable de Opciones --- */}
-        <div className="relative">
+        <div className="relative" ref={optionsRef}>
           <button
             onClick={() => setIsOptionsOpen((prev) => !prev)}
             className="px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded-full text-gray-800 dark:text-white font-semibold hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors text-sm"
@@ -119,6 +109,11 @@ const Header = () => {
                   label="Mostrar Diferencias"
                   checked={showDifferences}
                   onChange={(e) => setShowDifferences(e.target.checked)}
+                />
+                <CheckboxOption
+                  label="Mostrar Detalles"
+                  checked={showDetails}
+                  onChange={(e) => setShowDetails(e.target.checked)}
                 />
               </div>
             </div>

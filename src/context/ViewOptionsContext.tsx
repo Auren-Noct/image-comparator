@@ -4,30 +4,32 @@ import {
   useState,
   useMemo,
   type ReactNode,
+  type Dispatch,
+  type SetStateAction,
 } from "react";
 
 /**
- * Define el estado de las opciones de visualización.
+ * Define la forma del contexto de opciones de visualización.
  */
-interface ViewOptionsState {
+interface ViewOptionsContextType {
   showBaseImage: boolean;
-  setShowBaseImage: (value: boolean) => void;
+  setShowBaseImage: Dispatch<SetStateAction<boolean>>;
   showSimilarities: boolean;
-  setShowSimilarities: (value: boolean) => void;
+  setShowSimilarities: Dispatch<SetStateAction<boolean>>;
   showDifferences: boolean;
-  setShowDifferences: (value: boolean) => void;
+  setShowDifferences: Dispatch<SetStateAction<boolean>>;
+  showDetails: boolean;
+  setShowDetails: Dispatch<SetStateAction<boolean>>;
 }
 
-const ViewOptionsContext = createContext<ViewOptionsState | undefined>(
+const ViewOptionsContext = createContext<ViewOptionsContextType | undefined>(
   undefined
 );
 
 /**
- * Hook para consumir el estado de las opciones de visualización.
- * @returns {ViewOptionsState} El estado actual de las opciones de visualización y sus setters.
- * @throws {Error} Si se usa fuera de un `ViewOptionsProvider`.
+ * Hook para consumir el contexto de opciones de visualización.
  */
-export const useViewOptions = () => {
+export const useViewOptions = (): ViewOptionsContextType => {
   const context = useContext(ViewOptionsContext);
   if (!context) {
     throw new Error(
@@ -39,13 +41,12 @@ export const useViewOptions = () => {
 
 /**
  * Proveedor que gestiona el estado de las opciones de visualización.
- * @param {object} props - Las props del componente.
- * @param {ReactNode} props.children - Los componentes hijos que tendrán acceso al contexto.
  */
 export const ViewOptionsProvider = ({ children }: { children: ReactNode }) => {
-  const [showBaseImage, setShowBaseImage] = useState<boolean>(true);
-  const [showSimilarities, setShowSimilarities] = useState<boolean>(true);
-  const [showDifferences, setShowDifferences] = useState<boolean>(true);
+  const [showBaseImage, setShowBaseImage] = useState(true);
+  const [showSimilarities, setShowSimilarities] = useState(true);
+  const [showDifferences, setShowDifferences] = useState(true);
+  const [showDetails, setShowDetails] = useState(false);
 
   const value = useMemo(
     () => ({
@@ -55,8 +56,10 @@ export const ViewOptionsProvider = ({ children }: { children: ReactNode }) => {
       setShowSimilarities,
       showDifferences,
       setShowDifferences,
+      showDetails,
+      setShowDetails,
     }),
-    [showBaseImage, showSimilarities, showDifferences]
+    [showBaseImage, showSimilarities, showDifferences, showDetails]
   );
 
   return (
