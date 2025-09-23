@@ -1,12 +1,40 @@
 import {
   createContext,
   useContext,
-  useState,
   useMemo,
   type ReactNode,
   type Dispatch,
   type SetStateAction,
+  useState,
+  useEffect,
 } from "react";
+
+/**
+ * Hook genérico para crear un estado que persiste en localStorage.
+ * @param key La clave para usar en localStorage.
+ * @param defaultValue El valor por defecto si no hay nada en localStorage.
+ * @returns Una tupla con el estado y la función para actualizarlo.
+ */
+const usePersistentState = <T,>(
+  key: string,
+  defaultValue: T
+): [T, Dispatch<SetStateAction<T>>] => {
+  const [state, setState] = useState<T>(() => {
+    try {
+      const storedValue = window.localStorage.getItem(key);
+      return storedValue ? (JSON.parse(storedValue) as T) : defaultValue;
+    } catch (error) {
+      console.error(`Error al leer la clave "${key}" de localStorage:`, error);
+      return defaultValue;
+    }
+  });
+
+  useEffect(() => {
+    window.localStorage.setItem(key, JSON.stringify(state));
+  }, [key, state]);
+
+  return [state, setState];
+};
 
 /**
  * Define la forma del contexto de opciones de visualización.
@@ -43,10 +71,22 @@ export const useViewOptions = (): ViewOptionsContextType => {
  * Proveedor que gestiona el estado de las opciones de visualización.
  */
 export const ViewOptionsProvider = ({ children }: { children: ReactNode }) => {
-  const [showBaseImage, setShowBaseImage] = useState(true);
-  const [showSimilarities, setShowSimilarities] = useState(true);
-  const [showDifferences, setShowDifferences] = useState(true);
-  const [showDetails, setShowDetails] = useState(false);
+  const [showBaseImage, setShowBaseImage] = usePersistentState(
+    "viewOption_showBaseImage",
+    true
+  );
+  const [showSimilarities, setShowSimilarities] = usePersistentState(
+    "viewOption_showSimilarities",
+    true
+  );
+  const [showDifferences, setShowDifferences] = usePersistentState(
+    "viewOption_showDifferences",
+    true
+  );
+  const [showDetails, setShowDetails] = usePersistentState(
+    "viewOption_showDetails",
+    false
+  );
 
   const value = useMemo(
     () => ({
@@ -59,7 +99,16 @@ export const ViewOptionsProvider = ({ children }: { children: ReactNode }) => {
       showDetails,
       setShowDetails,
     }),
-    [showBaseImage, showSimilarities, showDifferences, showDetails]
+    [
+      showBaseImage,
+      setShowBaseImage,
+      showSimilarities,
+      setShowSimilarities,
+      showDifferences,
+      setShowDifferences,
+      showDetails,
+      setShowDetails,
+    ]
   );
 
   return (

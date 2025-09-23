@@ -25,10 +25,12 @@ const formatBytes = (bytes: number, decimals = 2) => {
  */
 const ImageDetailsOverlay = ({ imageInfo }: ImageDetailsOverlayProps) => {
   return (
-    <div className="absolute top-4 left-4 bg-gray-800 text-white text-xs px-2 py-1 rounded-lg opacity-85 pointer-events-none select-none">
+    <div className="absolute top-4 left-4 bg-gray-800 text-white text-xs px-2 py-1 rounded-lg opacity-85 select-none max-w-xs">
       <ul className="flex flex-col gap-1">
-        <li>
-          <strong>Nombre:</strong> {imageInfo.name}
+        <li className="flex items-center gap-1" title={imageInfo.name}>
+          <strong>Nombre:</strong>
+          {/* Se trunca el nombre para evitar desbordamiento */}
+          <span className="truncate">{imageInfo.name}</span>
         </li>
         <li>
           <strong>Dimensiones:</strong> {imageInfo.width} x {imageInfo.height}
