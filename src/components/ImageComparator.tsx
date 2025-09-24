@@ -37,7 +37,10 @@ const ImageComparator = () => {
   const { showBaseImage, showDetails } = useViewOptions();
 
   const showComparisonPanel = image1 && image2;
-  const containerClass = showComparisonPanel ? "w-1/3" : "w-1/2";
+  const containerClass = useMemo(
+    () => (showComparisonPanel ? "w-1/3" : "w-1/2"),
+    [showComparisonPanel]
+  );
   const { darkMode } = useTheme();
 
   const comparisonImageContent = useMemo(

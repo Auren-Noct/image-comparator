@@ -63,7 +63,13 @@ const ImageDropZone = ({
       className="relative w-full h-full flex flex-col items-center justify-center"
       {...dropzoneProps.getRootProps()}
     >
-      <input {...dropzoneProps.getInputProps()} />
+      <label htmlFor={dropzoneProps.inputRef.current?.id} className="sr-only">
+        {title}
+      </label>
+      <input
+        {...dropzoneProps.getInputProps()}
+        aria-label={`Cargar ${title}`}
+      />
       {isLoading ? (
         <div className="flex flex-col items-center justify-center gap-2">
           <Spinner />
