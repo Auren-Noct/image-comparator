@@ -126,6 +126,27 @@ export const ViewportProvider = ({ children }: { children: ReactNode }) => {
     setImage2Zoom(calculateZoom(image2Dimensions, containerDimensions));
   }, [globalScale, image1, image2, containerDimensions, calculateZoom]);
 
+  const prevImage1Ref = useRef(image1);
+  const prevImage2Ref = useRef(image2);
+
+  // Reinicia el zoom y la posición cuando se carga una nueva imagen.
+  useEffect(() => {
+    const prevImage1 = prevImage1Ref.current;
+    const prevImage2 = prevImage2Ref.current;
+
+    // Detecta si las imágenes solo se intercambiaron
+    const isSwap = image1 === prevImage2 && image2 === prevImage1;
+
+    // Si no es un intercambio (es una carga nueva o un reseteo), reinicia el zoom.
+    if (!isSwap) {
+      handleDoubleClick();
+    }
+
+    // Actualiza las referencias para la próxima renderización.
+    prevImage1Ref.current = image1;
+    prevImage2Ref.current = image2;
+  }, [image1, image2, handleDoubleClick]);
+
   const stateValue = useMemo(
     () => ({
       containerRef1,
