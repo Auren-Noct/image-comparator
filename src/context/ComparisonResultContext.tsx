@@ -6,6 +6,7 @@ import { createContext, useContext, type ReactNode } from "react";
 interface ComparisonResultState {
   comparisonImageUrl: string | null;
   similarityPercentage: number | null;
+  isProcessing: boolean;
   tempCanvasRef: React.RefObject<HTMLCanvasElement | null>;
   comparisonCanvasRef: React.RefObject<HTMLCanvasElement | null>;
 }

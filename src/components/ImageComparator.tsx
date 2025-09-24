@@ -7,6 +7,7 @@ import { useTheme } from "../context/ThemeContext";
 import ImageDropZone from "./ImageDropZone";
 import DraggableImage from "./DraggableImage";
 import ComparisonStats from "./ComparisonStats";
+import Spinner from "./Spinner";
 
 /**
  * Componente principal que contiene la interfaz de usuario para la comparación de imágenes.
@@ -14,7 +15,7 @@ import ComparisonStats from "./ComparisonStats";
  * @returns Un elemento JSX con la estructura de la aplicación.
  */
 const ImageComparator = () => {
-  const { image1, image2 } = useImageData();
+  const { image1, image2, isLoading1, isLoading2 } = useImageData();
   const { dropzoneProps1, dropzoneProps2 } = useImageActions();
   const {
     containerRef1,
@@ -27,8 +28,12 @@ const ImageComparator = () => {
   } = useViewport();
   const { handleDoubleClick, handleWheel, handleMouseDown } =
     useViewportActions();
-  const { comparisonImageUrl, tempCanvasRef, comparisonCanvasRef } =
-    useComparisonResult();
+  const {
+    comparisonImageUrl,
+    isProcessing,
+    tempCanvasRef,
+    comparisonCanvasRef,
+  } = useComparisonResult();
   const { showBaseImage, showDetails } = useViewOptions();
 
   const showComparisonPanel = image1 && image2;
@@ -80,6 +85,7 @@ const ImageComparator = () => {
             title="primera imagen"
             titleColorClass="text-blue-700"
             zoomPercentage={image1Zoom}
+            isLoading={isLoading1}
           />
         </div>
 
@@ -97,6 +103,7 @@ const ImageComparator = () => {
             title="segunda imagen"
             titleColorClass="text-green-700"
             zoomPercentage={image2Zoom}
+            isLoading={isLoading2}
           />
         </div>
 
@@ -107,19 +114,33 @@ const ImageComparator = () => {
               darkMode ? "bg-gray-800" : "bg-white"
             } relative`}
           >
-            {/* Contenedor que define el área visual y recorta el contenido */}
-            <div className="relative w-full h-full overflow-hidden">
-              <DraggableImage
-                scale={globalScale}
-                position={globalPosition}
-                onWheel={handleWheel}
-                onMouseDown={handleMouseDown}
-                isDragging={isDragging}
-              >
-                {comparisonImageContent}
-              </DraggableImage>
-            </div>
-            <ComparisonStats />
+            {isProcessing ? (
+              <div className="flex flex-col items-center justify-center gap-2">
+                <Spinner />
+                <p
+                  className={`text-center font-semibold ${
+                    darkMode ? "text-gray-300" : "text-gray-600"
+                  }`}
+                >
+                  Comparando imágenes...
+                </p>
+              </div>
+            ) : (
+              <>
+                <div className="relative w-full h-full overflow-hidden">
+                  <DraggableImage
+                    scale={globalScale}
+                    position={globalPosition}
+                    onWheel={handleWheel}
+                    onMouseDown={handleMouseDown}
+                    isDragging={isDragging}
+                  >
+                    {comparisonImageContent}
+                  </DraggableImage>
+                </div>
+                <ComparisonStats />
+              </>
+            )}
           </div>
         )}
       </div>

@@ -32,6 +32,8 @@ export interface ImageInfo {
 interface ImageDataState {
   image1: ImageInfo | null;
   image2: ImageInfo | null;
+  isLoading1: boolean;
+  isLoading2: boolean;
 }
 
 /**
@@ -85,10 +87,17 @@ export const useImageActions = () => {
 export const ImageDataProvider = ({ children }: { children: ReactNode }) => {
   const [image1, setImage1] = useState<ImageInfo | null>(null);
   const [image2, setImage2] = useState<ImageInfo | null>(null);
+  const [isLoading1, setIsLoading1] = useState(false);
+  const [isLoading2, setIsLoading2] = useState(false);
   const { showNotification } = useNotification();
 
   const handleFile = useCallback(
-    (file: File, setImage: (info: ImageInfo | null) => void) => {
+    (
+      file: File,
+      setImage: (info: ImageInfo | null) => void,
+      setIsLoading: (loading: boolean) => void
+    ) => {
+      setIsLoading(true);
       const reader = new FileReader();
       reader.onload = (e) => {
         const img = new Image();
@@ -103,6 +112,7 @@ export const ImageDataProvider = ({ children }: { children: ReactNode }) => {
             height: img.height,
           };
           setImage(imageInfo);
+          setIsLoading(false);
         };
         img.src = e.target?.result as string;
         img.onerror = (error) => {
@@ -111,7 +121,7 @@ export const ImageDataProvider = ({ children }: { children: ReactNode }) => {
           showNotification(
             "El archivo seleccionado no es una imagen válida o está corrupto. Por favor, intente con otro archivo."
           );
-          // No se llama a setImage, conservando así la imagen anterior.
+          setIsLoading(false);
         };
       };
       reader.readAsDataURL(file);
@@ -125,7 +135,10 @@ export const ImageDataProvider = ({ children }: { children: ReactNode }) => {
    * @param setImage La función para actualizar el estado de la imagen correspondiente.
    */
   const createOnDropHandler = useCallback(
-    (setImage: (info: ImageInfo | null) => void) =>
+    (
+        setImage: (info: ImageInfo | null) => void,
+        setIsLoading: (loading: boolean) => void
+      ) =>
       (acceptedFiles: File[], fileRejections: FileRejection[]) => {
         // Fail Fast: Manejo centralizado y específico de errores de carga.
         if (fileRejections.length > 0) {
@@ -156,7 +169,7 @@ export const ImageDataProvider = ({ children }: { children: ReactNode }) => {
           return; // Detiene la ejecución si hay errores.
         }
         if (acceptedFiles.length > 0) {
-          handleFile(acceptedFiles[0], setImage);
+          handleFile(acceptedFiles[0], setImage, setIsLoading);
         }
       },
     [handleFile, showNotification]
@@ -175,11 +188,11 @@ export const ImageDataProvider = ({ children }: { children: ReactNode }) => {
     },
   };
   const dropzoneProps1 = useDropzone({
-    onDrop: createOnDropHandler(setImage1),
+    onDrop: createOnDropHandler(setImage1, setIsLoading1),
     ...dropzoneOptions,
   });
   const dropzoneProps2 = useDropzone({
-    onDrop: createOnDropHandler(setImage2),
+    onDrop: createOnDropHandler(setImage2, setIsLoading2),
     ...dropzoneOptions,
   });
 
@@ -193,7 +206,10 @@ export const ImageDataProvider = ({ children }: { children: ReactNode }) => {
     setImage2(image1);
   }, [image1, image2]);
 
-  const imageDataValue = useMemo(() => ({ image1, image2 }), [image1, image2]);
+  const imageDataValue = useMemo(
+    () => ({ image1, image2, isLoading1, isLoading2 }),
+    [image1, image2, isLoading1, isLoading2]
+  );
   const imageActionsValue = useMemo(
     () => ({
       dropzoneProps1,

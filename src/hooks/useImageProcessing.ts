@@ -5,6 +5,7 @@ type ImageWorkerType = Worker;
 interface ImageProcessingResult {
   comparisonImageUrl: string | null;
   similarityPercentage: number | null;
+  isProcessing: boolean;
   tempCanvasRef: React.RefObject<HTMLCanvasElement | null>;
   comparisonCanvasRef: React.RefObject<HTMLCanvasElement | null>;
 }
@@ -49,6 +50,8 @@ export const useImageProcessing = (
   const [similarityPercentage, setSimilarityPercentage] = useState<
     number | null
   >(null);
+  const [isProcessing, setIsProcessing] = useState(false);
+
   const tempCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const comparisonCanvasRef = useRef<HTMLCanvasElement | null>(null);
 
@@ -83,6 +86,7 @@ export const useImageProcessing = (
       });
       setComparisonImageUrl(null);
       setSimilarityPercentage(null);
+      setIsProcessing(false);
       return;
     }
 
@@ -92,6 +96,7 @@ export const useImageProcessing = (
         return;
       }
 
+      setIsProcessing(true);
       try {
         const [firstImage, secondImage] = await Promise.all([
           loadImage(image1Url),
@@ -129,6 +134,7 @@ export const useImageProcessing = (
         setImageData({ firstImageData, secondImageData, width, height });
       } catch (error) {
         console.error("Error al cargar las imágenes:", error);
+        setIsProcessing(false);
       }
     };
 
@@ -144,6 +150,7 @@ export const useImageProcessing = (
 
     // No hay datos para procesar
     if (!firstImageData || !secondImageData) {
+      setIsProcessing(false);
       return;
     }
 
@@ -171,6 +178,7 @@ export const useImageProcessing = (
 
         setComparisonImageUrl(comparisonCanvas.toDataURL());
         setSimilarityPercentage(similarityPercentage);
+        setIsProcessing(false);
       };
     }
 
@@ -200,6 +208,7 @@ export const useImageProcessing = (
   return {
     comparisonImageUrl,
     similarityPercentage,
+    isProcessing,
     tempCanvasRef,
     comparisonCanvasRef,
   };

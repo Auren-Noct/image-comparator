@@ -5,6 +5,7 @@ import { useViewport, useViewportActions } from "../context/ViewportContext";
 import { useTheme } from "../context/ThemeContext";
 import type { ImageInfo } from "../context/ImageDataContext";
 import ImageDetailsOverlay from "./ImageDetailsOverlay";
+import Spinner from "./Spinner";
 
 /**
  * Propiedades para el componente ImageDropZone.
@@ -34,6 +35,10 @@ interface ImageDropZoneProps {
    * El porcentaje de zoom actual de la imagen.
    */
   zoomPercentage: number | null;
+  /**
+   * Indica si la imagen se está cargando.
+   */
+  isLoading: boolean;
 }
 
 /**
@@ -47,6 +52,7 @@ const ImageDropZone = ({
   title,
   titleColorClass,
   zoomPercentage,
+  isLoading,
 }: ImageDropZoneProps) => {
   const { darkMode } = useTheme();
   const { globalScale, globalPosition, isDragging } = useViewport();
@@ -58,7 +64,18 @@ const ImageDropZone = ({
       {...dropzoneProps.getRootProps()}
     >
       <input {...dropzoneProps.getInputProps()} />
-      {imageInfo ? (
+      {isLoading ? (
+        <div className="flex flex-col items-center justify-center gap-2">
+          <Spinner />
+          <p
+            className={`text-center font-semibold ${
+              darkMode ? "text-gray-300" : "text-gray-600"
+            }`}
+          >
+            Procesando imagen...
+          </p>
+        </div>
+      ) : imageInfo ? (
         <>
           {/* Contenedor que define el área visual y recorta el contenido */}
           <div className="relative w-full h-full overflow-hidden">

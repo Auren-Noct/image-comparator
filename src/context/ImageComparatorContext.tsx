@@ -16,6 +16,7 @@ const ImageComparatorOrchestrator = ({ children }: { children: ReactNode }) => {
   const {
     comparisonImageUrl,
     similarityPercentage,
+    isProcessing,
     tempCanvasRef,
     comparisonCanvasRef,
   } = useImageProcessing(
@@ -31,6 +32,7 @@ const ImageComparatorOrchestrator = ({ children }: { children: ReactNode }) => {
       value={{
         comparisonImageUrl,
         similarityPercentage,
+        isProcessing,
         tempCanvasRef,
         comparisonCanvasRef,
       }}
