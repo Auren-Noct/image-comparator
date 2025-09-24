@@ -1,11 +1,10 @@
 import {
+  memo,
   type CSSProperties,
   type ReactElement,
   type WheelEvent,
   type MouseEvent,
-  cloneElement,
 } from "react";
-import { memo } from "react";
 
 /**
  * Propiedades para el componente DraggableImage.
@@ -14,7 +13,7 @@ interface DraggableImageProps {
   /**
    * El elemento hijo que será arrastrado y escalado.
    */
-  children: ReactElement<{ style?: CSSProperties }>;
+  children: ReactElement;
   /**
    * El factor de escala para el zoom.
    */
@@ -50,22 +49,29 @@ const DraggableImage = ({
   onMouseDown,
   isDragging,
 }: DraggableImageProps) => {
-  const imageStyle: CSSProperties = {
+  // Estilo para el contenedor que se transforma (escala y arrastra)
+  const transformStyle: CSSProperties = {
     transform: `translate(${position.x}px, ${position.y}px) scale(${scale})`,
+    transition: "transform 0s", // Evita transiciones bruscas al arrastrar
+    width: "100%",
+    height: "100%",
+  };
+
+  // Estilo para el contenedor que centra la imagen
+  const wrapperStyle: CSSProperties = {
     cursor: isDragging ? "grabbing" : "grab",
-    transition: "transform 0s",
   };
 
   return (
     <div
-      className="w-full h-full overflow-hidden flex justify-center items-center"
+      // Posicionamiento absoluto para aislarlo del layout
+      className="absolute inset-0"
       onMouseDown={onMouseDown}
       onWheel={onWheel}
+      style={wrapperStyle}
     >
-      {children &&
-        cloneElement(children, {
-          style: { ...children.props.style, ...imageStyle },
-        })}
+      {/* Este div se transforma, y el hijo (la imagen) se ajusta a él */}
+      <div style={transformStyle}>{children}</div>
     </div>
   );
 };

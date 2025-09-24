@@ -60,19 +60,22 @@ const ImageDropZone = ({
       <input {...dropzoneProps.getInputProps()} />
       {imageInfo ? (
         <>
-          <DraggableImage
-            scale={globalScale}
-            position={globalPosition}
-            onWheel={handleWheel}
-            onMouseDown={handleMouseDown}
-            isDragging={isDragging}
-          >
-            <img
-              src={imageInfo.url}
-              alt={title}
-              className="h-full w-auto object-contain"
-            />
-          </DraggableImage>
+          {/* Contenedor que define el área visual y recorta el contenido */}
+          <div className="relative w-full h-full overflow-hidden">
+            <DraggableImage
+              scale={globalScale}
+              position={globalPosition}
+              onWheel={handleWheel}
+              onMouseDown={handleMouseDown}
+              isDragging={isDragging}
+            >
+              <img
+                src={imageInfo.url}
+                alt={title}
+                className="w-full h-full object-contain"
+              />
+            </DraggableImage>
+          </div>
           {showDetails && <ImageDetailsOverlay imageInfo={imageInfo} />}
           <div
             className={`absolute top-4 right-4 text-sm px-2 py-1 rounded-full opacity-75 ${

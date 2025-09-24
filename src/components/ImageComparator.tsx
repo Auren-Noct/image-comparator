@@ -14,7 +14,7 @@ import ComparisonStats from "./ComparisonStats";
  * @returns Un elemento JSX con la estructura de la aplicación.
  */
 const ImageComparator = () => {
-  const { image1, image2, isSecondImageLoaded } = useImageData();
+  const { image1, image2 } = useImageData();
   const { dropzoneProps1, dropzoneProps2 } = useImageActions();
   const {
     containerRef1,
@@ -31,7 +31,8 @@ const ImageComparator = () => {
     useComparisonResult();
   const { showBaseImage, showDetails } = useViewOptions();
 
-  const containerClass = isSecondImageLoaded ? "w-1/3" : "w-1/2";
+  const showComparisonPanel = image1 && image2;
+  const containerClass = showComparisonPanel ? "w-1/3" : "w-1/2";
   const { darkMode } = useTheme();
 
   const comparisonImageContent = useMemo(
@@ -100,22 +101,24 @@ const ImageComparator = () => {
         </div>
 
         {/* Imagen de Comparación */}
-        {isSecondImageLoaded && (
+        {showComparisonPanel && (
           <div
             className={`${containerClass} h-full transition-all duration-500 rounded-lg shadow-lg flex flex-col justify-center items-center ${
               darkMode ? "bg-gray-800" : "bg-white"
             } relative`}
           >
-            <DraggableImage
-              scale={globalScale}
-              position={globalPosition}
-              onWheel={handleWheel}
-              onMouseDown={handleMouseDown}
-              isDragging={isDragging}
-            >
-              {comparisonImageContent}
-            </DraggableImage>
-
+            {/* Contenedor que define el área visual y recorta el contenido */}
+            <div className="relative w-full h-full overflow-hidden">
+              <DraggableImage
+                scale={globalScale}
+                position={globalPosition}
+                onWheel={handleWheel}
+                onMouseDown={handleMouseDown}
+                isDragging={isDragging}
+              >
+                {comparisonImageContent}
+              </DraggableImage>
+            </div>
             <ComparisonStats />
           </div>
         )}

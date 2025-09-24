@@ -27,7 +27,6 @@ export interface ImageInfo {
 interface ImageDataState {
   image1: ImageInfo | null;
   image2: ImageInfo | null;
-  isSecondImageLoaded: boolean;
 }
 
 /**
@@ -128,10 +127,7 @@ export const ImageDataProvider = ({ children }: { children: ReactNode }) => {
     setImage2(image1);
   }, [image1, image2]);
 
-  const imageDataValue = useMemo(
-    () => ({ image1, image2, isSecondImageLoaded: !!image2 }),
-    [image1, image2]
-  );
+  const imageDataValue = useMemo(() => ({ image1, image2 }), [image1, image2]);
   const imageActionsValue = useMemo(
     () => ({
       dropzoneProps1,
