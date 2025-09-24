@@ -53,7 +53,7 @@ const useThemeState = () => {
     try {
       const storedTheme = window.localStorage.getItem("theme");
       return storedTheme === "dark";
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("No se pudo acceder a localStorage", error);
       // Falla rápido y usa un valor por defecto seguro.
       return window.matchMedia("(prefers-color-scheme: dark)").matches;
@@ -65,7 +65,7 @@ const useThemeState = () => {
     // Fail-fast: Captura de errores al guardar en localStorage.
     try {
       window.localStorage.setItem("theme", darkMode ? "dark" : "light");
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("No se pudo guardar en localStorage", error);
     }
   }, [darkMode]);

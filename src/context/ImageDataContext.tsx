@@ -6,7 +6,12 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { useDropzone, type DropzoneState } from "react-dropzone";
+import {
+  useDropzone,
+  type DropzoneState,
+  type FileRejection,
+} from "react-dropzone";
+import { useNotification } from "./NotificationContext";
 
 /**
  * Información detallada de una imagen cargada.
@@ -80,6 +85,7 @@ export const useImageActions = () => {
 export const ImageDataProvider = ({ children }: { children: ReactNode }) => {
   const [image1, setImage1] = useState<ImageInfo | null>(null);
   const [image2, setImage2] = useState<ImageInfo | null>(null);
+  const { showNotification } = useNotification();
 
   const handleFile = useCallback(
     (file: File, setImage: (info: ImageInfo | null) => void) => {
@@ -99,23 +105,83 @@ export const ImageDataProvider = ({ children }: { children: ReactNode }) => {
           setImage(imageInfo);
         };
         img.src = e.target?.result as string;
+        img.onerror = (error) => {
+          // Manejo explícito de errores si el archivo no es una imagen válida
+          console.error("Error al cargar el archivo de imagen:", error);
+          showNotification(
+            "El archivo seleccionado no es una imagen válida o está corrupto. Por favor, intente con otro archivo."
+          );
+          // No se llama a setImage, conservando así la imagen anterior.
+        };
       };
       reader.readAsDataURL(file);
     },
-    []
+    [showNotification]
   );
 
-  const onDrop1 = useCallback(
-    (acceptedFiles: File[]) => handleFile(acceptedFiles[0], setImage1),
-    [handleFile]
-  );
-  const onDrop2 = useCallback(
-    (acceptedFiles: File[]) => handleFile(acceptedFiles[0], setImage2),
-    [handleFile]
+  /**
+   * Crea un manejador onDrop para una zona de carga específica.
+   * Centraliza la lógica de manejo de errores (DRY).
+   * @param setImage La función para actualizar el estado de la imagen correspondiente.
+   */
+  const createOnDropHandler = useCallback(
+    (setImage: (info: ImageInfo | null) => void) =>
+      (acceptedFiles: File[], fileRejections: FileRejection[]) => {
+        // Fail Fast: Manejo centralizado y específico de errores de carga.
+        if (fileRejections.length > 0) {
+          const firstError = fileRejections[0].errors[0];
+          let errorMessage: string;
+
+          // Un switch completo para manejar todos los errores posibles de react-dropzone.
+          switch (firstError.code) {
+            case "file-invalid-type":
+              errorMessage =
+                "Tipo de archivo no válido. Solo se admiten imágenes.";
+              break;
+            case "file-too-large":
+              errorMessage =
+                "El archivo es demasiado grande. El tamaño máximo es de 50MB.";
+              break;
+            case "file-too-small":
+              errorMessage = "El archivo es demasiado pequeño.";
+              break;
+            case "too-many-files":
+              errorMessage = "Solo puedes subir una imagen a la vez.";
+              break;
+            default:
+              errorMessage = "El archivo no pudo ser cargado.";
+              break;
+          }
+          showNotification(errorMessage);
+          return; // Detiene la ejecución si hay errores.
+        }
+        if (acceptedFiles.length > 0) {
+          handleFile(acceptedFiles[0], setImage);
+        }
+      },
+    [handleFile, showNotification]
   );
 
-  const dropzoneProps1 = useDropzone({ onDrop: onDrop1, noClick: true });
-  const dropzoneProps2 = useDropzone({ onDrop: onDrop2, noClick: true });
+  const dropzoneOptions = {
+    noClick: true,
+    maxFiles: 1,
+    maxSize: 50 * 1024 * 1024, // 50 MB
+    accept: {
+      "image/jpeg": [],
+      "image/png": [],
+      "image/webp": [],
+      "image/gif": [],
+      "image/bmp": [],
+    },
+  };
+  const dropzoneProps1 = useDropzone({
+    onDrop: createOnDropHandler(setImage1),
+    ...dropzoneOptions,
+  });
+  const dropzoneProps2 = useDropzone({
+    onDrop: createOnDropHandler(setImage2),
+    ...dropzoneOptions,
+  });
 
   const handleResetImages = useCallback(() => {
     setImage1(null);
