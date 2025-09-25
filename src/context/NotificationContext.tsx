@@ -6,7 +6,7 @@ import {
   type ReactNode,
   useMemo,
 } from "react";
-import Notification from "../components/Notification";
+import { Notification } from "../components";
 
 /**
  * Define la forma del contexto de notificaciones.

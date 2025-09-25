@@ -1,5 +1,5 @@
 import { type ReactNode } from "react";
-import { useImageProcessing } from "../hooks/useImageProcessing";
+import { useImageProcessing } from "../hooks";
 import { ImageDataProvider, useImageData } from "./ImageDataContext";
 import { ViewOptionsProvider, useViewOptions } from "./ViewOptionsContext";
 import { ViewportProvider } from "./ViewportContext";

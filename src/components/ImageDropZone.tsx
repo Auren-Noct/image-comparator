@@ -1,9 +1,12 @@
 import type { DropzoneState } from "react-dropzone";
-import DraggableImage from "./DraggableImage";
 import { memo } from "react";
-import { useViewport, useViewportActions } from "../context/ViewportContext";
-import { useTheme } from "../context/ThemeContext";
-import type { ImageInfo } from "../context/ImageDataContext";
+import {
+  useTheme,
+  useViewport,
+  useViewportActions,
+  type ImageInfo,
+} from "../context";
+import DraggableImage from "./DraggableImage";
 import ImageDetailsOverlay from "./ImageDetailsOverlay";
 import Spinner from "./Spinner";
 

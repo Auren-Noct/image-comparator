@@ -1,5 +1,4 @@
-import type { ImageInfo } from "../context/ImageDataContext";
-import { useTheme } from "../context/ThemeContext";
+import { useTheme, type ImageInfo } from "../context";
 
 interface ImageDetailsOverlayProps {
   imageInfo: ImageInfo;

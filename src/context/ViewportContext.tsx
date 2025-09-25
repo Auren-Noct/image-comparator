@@ -8,8 +8,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { useSynchronizedDragZoom } from "../hooks/useSynchronizedDragZoom";
-import { useResizeObserver } from "../hooks/useResizeObserver";
+import { useResizeObserver, useSynchronizedDragZoom } from "../hooks";
 import { useImageData } from "./ImageDataContext";
 
 /**
