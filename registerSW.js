@@ -1,0 +1,1 @@
+if('serviceWorker' in navigator) {window.addEventListener('load', () => {navigator.serviceWorker.register('https://Auren-Noct.github.io/image-comparator/sw.js', { scope: 'https://Auren-Noct.github.io/image-comparator/' })})}
